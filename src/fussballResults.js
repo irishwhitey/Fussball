@@ -24,8 +24,39 @@ var findDocuments = function(db, callback) {
   });
 }
 
+var parseQueryString = function(queryString){
+  var splitFixture = queryString.fixture.split('-');
+  var splitScores = queryString.score.split('-')
+  return {
+    "home" : splitFixture[0],
+    "away" : splitFixture[1],
+    "homeScore" : splitScores[0],
+    "awayScore" : splitScores[1],
+    "date" : new Date()
+  }
+}
+
+var insertDocuments = function(db, gameResult, callback) {
+  // Get the documents collection 
+  var collection = db.collection('results');
+  // Insert some documents 
+  collection.insert(
+    gameResult
+  , function(err, result) {
+    assert.equal(err, null);
+    console.log("Inserted new result document");
+    console.log(gameResult);
+    console.log(result);
+    callback(result);
+  });
+}
+
 module.exports ={
 	get :function(onSuccess){
 		findDocuments(database,onSuccess);
-	}
+	},
+  insert :function(queryString, onSuccess){
+      var toInsert = parseQueryString(queryString);
+      insertDocuments(database, toInsert, onSuccess);
+  }
 }

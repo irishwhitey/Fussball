@@ -19,4 +19,11 @@ app.get('/', function (req, res) {
 	});
 });
 
+app.get('/result', function (req, res) {
+	fussballResults.insert(req.query, function(){
+		res.redirect('/');
+	});
+});
+
+
 app.listen(80)

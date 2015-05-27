@@ -1,0 +1,16 @@
+{
+  "name": "FussballWorldCup",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "mocha test\\**.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.12.4",
+    "handlebars": "^3.0.3",
+    "mongod": "^1.3.0"
+  }
+}

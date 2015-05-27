@@ -11,7 +11,6 @@ MongoClient.connect(url, function(err, db) {
   database = db;  
 });
 
-
 var findDocuments = function(db, callback) {
   // Get the documents collection 
   var collection = db.collection('results');
@@ -28,10 +27,10 @@ var parseQueryString = function(queryString){
   var splitFixture = queryString.fixture.split('-');
   var splitScores = queryString.score.split('-')
   return {
-    "home" : splitFixture[0],
-    "away" : splitFixture[1],
-    "homeScore" : splitScores[0],
-    "awayScore" : splitScores[1],
+    "home team" : splitFixture[0],
+    "away team" : splitFixture[1],
+    "home score" : splitScores[0],
+    "away score" : splitScores[1],
     "date" : new Date()
   }
 }

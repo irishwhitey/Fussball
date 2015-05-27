@@ -1,6 +1,10 @@
 <html>
 <head></head>
 <body>
-looks good
+Results<br/>
+
+{{#each RawResults}}
+{{'home team'}} vs  {{"away team"}} Result : {{"home score"}} - {{"away score"}}  @ {{date}} <br/>
+{{/each}}
 </body>
 </html>

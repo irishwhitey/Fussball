@@ -1,0 +1,5 @@
+[{ $project: {
+         	winner : { $cond: { if: { $eq: [ "10", "$home score" ] }, then: "$home team", else: "$away team" }}            
+         }
+      
+      }]

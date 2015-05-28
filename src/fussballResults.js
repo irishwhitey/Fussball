@@ -25,7 +25,7 @@ var findDocuments = function(db, callback) {
 
 var parseQueryString = function(queryString){
   var splitFixture = queryString.fixture.toUpperCase().split('-');
-  var splitScores = queryString.score.split('-')
+  var splitScores = queryString.score.split('-')  
   return {
     "home team" : splitFixture[0],
     "away team" : splitFixture[1],

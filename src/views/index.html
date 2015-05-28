@@ -1,10 +1,14 @@
 <html>
 <head></head>
 <body>
-Results<br/>
-
+<h1>LeaderBoard</h1><br/>
+{{#each Table}}
+{{'_id'}}    {{'TotalPoints'}}<br/>
+{{/each}}
+<br/>
+<h2>RawResults</h2>
 {{#each RawResults}}
-{{'home team'}} vs  {{"away team"}} Result : {{"home score"}} - {{"away score"}}  @ {{date}} <br/>
+{{'home team'}} vs  {{'away team'}} Result : {{'home score'}} - {{'away score'}}  @ {{date}} <br/>
 {{/each}}
 </body>
 </html>

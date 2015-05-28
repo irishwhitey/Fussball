@@ -1,5 +1,12 @@
-[{ $project: {
-         	winner : { $cond: { if: { $eq: [ "10", "$home score" ] }, then: "$home team", else: "$away team" }}            
-         }
-      
-      }]
+[
+	{ 
+		$project: {
+         	winner : { $cond: { if: { $eq: [ "10", "$home score" ] }, then: "$home team", else: "$away team" }}           
+         }      
+    },
+    {$group: {_id: "$winner", TotalPoints: { $sum: 1 } }},
+    {
+    	$sort :{ TotalPoints : -1}
+    }
+ ]
+

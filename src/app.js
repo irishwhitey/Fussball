@@ -14,7 +14,8 @@ var indexTemplate = Handlebars.compile(source1)
 app.get('/', function (req, res) {
 	fussballResults.get(function(results){
 		res.send(indexTemplate({
-			"RawResults" : results
+			"Table": results.Table,
+			"RawResults" : results.RawResults
 		}))	
 	});
 });

@@ -50,9 +50,34 @@ var insertDocuments = function(db, gameResult, callback) {
   });
 }
 
+var getTable = function(db, callback){
+      db.collection('results').aggregate([
+          { $project: { winner : { $cond: { if: { $eq: [ "10", "$home score" ] }, then: "$home team", else: "$away team" }}}},
+          { $group: {_id: "$winner", TotalPoints: { $sum: 1 } }},
+          { $sort :{ TotalPoints : -1}}         
+      ]).toArray(function(err, docs) {
+      assert.equal(null, err);
+      callback(docs);
+    });
+}
+
 module.exports ={
 	get :function(onSuccess){
-		findDocuments(database,onSuccess);
+    getTable(database, function(table){
+      console.log('table is ')
+      console.log(table)
+        findDocuments(database, function(rawResults){
+          console.log('rawResults is ')
+          console.log(rawResults)
+          onSuccess({
+            "Table": table,
+            "RawResults" : rawResults
+          });
+        });        
+    });
+
+		
+
 	},
   insert :function(queryString, onSuccess){
       var toInsert = parseQueryString(queryString);

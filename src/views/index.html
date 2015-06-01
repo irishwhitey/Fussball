@@ -1,12 +1,16 @@
 <html>
 <head></head>
 <body>
-<h1>LeaderBoard</h1><br/>
+<h1>Leader Board</h1><br/>
+
+<h3>Current Leader : {{Table.[0]._id}} </h3><br/>
+<br/>
+
 {{#each Table}}
-{{'_id'}}    {{'TotalPoints'}}<br/>
+<a href="./{{_id}}">{{_id}}</a>    {{'TotalPoints'}}<br/>
 {{/each}}
 <br/>
-<h2>RawResults</h2>
+<h2>Raw Results</h2>
 {{#each RawResults}}
 {{'home team'}} vs  {{'away team'}} Result : {{'home score'}} - {{'away score'}}  @ {{date}} <br/>
 {{/each}}

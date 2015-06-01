@@ -11,17 +11,27 @@ MongoClient.connect(url, function(err, db) {
   database = db;  
 });
 
-var findDocuments = function(db, callback) {
+var findDocuments = function(db, playerName, callback) {
   // Get the documents collection 
   var collection = db.collection('results');
-  // Find some documents 
-  collection.find({}).toArray(function(err, docs) {
+  // Find some documents
+  query = {}
+  console.log('player name is ' + playerName)
+  if (playerName != null){
+    query = {
+      $or: [ { 'home team' : playerName }, { 'away team': playerName }]
+    }
+  }
+  console.log('query is ' +query)
+  collection.find(query).toArray(function(err, docs) {
     assert.equal(err, null);    
     console.log("Found the following records");
     console.dir(docs);
     callback(docs);
   });
 }
+
+
 
 var parseQueryString = function(queryString){
   var splitFixture = queryString.fixture.toUpperCase().split('-');
@@ -50,23 +60,28 @@ var insertDocuments = function(db, gameResult, callback) {
   });
 }
 
-var getTable = function(db, callback){
-      db.collection('results').aggregate([
-          { $project: { winner : { $cond: { if: { $eq: [ "10", "$home score" ] }, then: "$home team", else: "$away team" }}}},
-          { $group: {_id: "$winner", TotalPoints: { $sum: 1 } }},
-          { $sort :{ TotalPoints : -1}}         
-      ]).toArray(function(err, docs) {
-      assert.equal(null, err);
-      callback(docs);
+var getTable = function(db, playerName, callback){
+      
+      var aggregate =[]
+      if (playerName !=null){
+        console.log('aggregate....' + playerName)
+          aggregate.push({ $match: {$or: [ { 'home team' : playerName }, { 'away team': playerName }]}});
+      }
+      aggregate.push({ $project: { winner : { $cond: { if: { $eq: [ "10", "$home score" ] }, then: "$home team", else: "$away team" }}}})
+      aggregate.push({ $group: {_id: "$winner", TotalPoints: { $sum: 1 } }})
+      aggregate.push({ $sort :{ TotalPoints : -1}})
+      db.collection('results').aggregate(aggregate).toArray(function(err, docs) {
+        assert.equal(null, err);  
+        callback(docs);
     });
 }
 
 module.exports ={
 	get :function(onSuccess){
-    getTable(database, function(table){
+    getTable(database, null, function(table){
       console.log('table is ')
       console.log(table)
-        findDocuments(database, function(rawResults){
+        findDocuments(database, null, function(rawResults){
           console.log('rawResults is ')
           console.log(rawResults)
           onSuccess({
@@ -75,10 +90,21 @@ module.exports ={
           });
         });        
     });
-
-		
-
 	},
+  getForPlayer: function(playerName, onSuccess){
+    getTable(database, playerName, function(table){
+      console.log('table is ')
+      console.log(table)
+        findDocuments(database, playerName, function(rawResults){
+          console.log('rawResults is ')
+          console.log(rawResults)
+          onSuccess({
+            "Table": table,
+            "RawResults" : rawResults
+          });
+        });        
+    });
+  },
   insert :function(queryString, onSuccess){
       var toInsert = parseQueryString(queryString);
       insertDocuments(database, toInsert, onSuccess);

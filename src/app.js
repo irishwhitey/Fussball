@@ -22,9 +22,23 @@ app.get('/', function (req, res) {
 
 app.get('/result', function (req, res) {
 	fussballResults.insert(req.query, function(){
-		res.redirect('/');
+		res.redirect('/'
+		);
 	});
 });
+
+app.get('/*', function (req, res) {
+	console.log(req.path);	
+	fussballResults.getForPlayer(req.path.replace("/",""), function(results){
+		res.send(indexTemplate({
+			"Table": results.Table,
+			"RawResults" : results.RawResults
+		}))	
+	});
+});
+
+
+
 
 
 app.listen(80)
